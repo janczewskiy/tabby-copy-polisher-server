@@ -1,4 +1,5 @@
 export default async function handler(req, res) {
+  // ✅ Handle CORS preflight
   if (req.method === 'OPTIONS') {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -6,7 +7,7 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  res.setHeader('Access-Control-Allow-Origin', '*'); // 👈 ключевая строка
+  res.setHeader('Access-Control-Allow-Origin', '*');
 
   const { image, token } = req.body;
   const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
@@ -26,7 +27,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: "gpt-4-vision-preview",
         messages: [
-          { role: "system", content: "You are a UX writer using the Tabby style guide..." },
+          { role: "system", content: "You are a senior UX writer using Tabby style guide..." },
           {
             role: "user",
             content: [
@@ -36,7 +37,7 @@ export default async function handler(req, res) {
               },
               {
                 type: "text",
-                text: "Analyze this screen and return suggestions."
+                text: "Analyze this screen and return copy suggestions."
               }
             ]
           }
@@ -50,7 +51,7 @@ export default async function handler(req, res) {
     res.json({ result: content || "No output." });
 
   } catch (err) {
-    console.error("Error:", err);
+    console.error("❌ Server error:", err);
     res.status(500).json({ error: "Failed to process image." });
   }
 }
