@@ -21,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const completion = await openai.createChatCompletion({
-      model: 'gpt-4',
+      model: 'gpt-4', // или временно: 'gpt-3.5-turbo'
       messages: [
         { role: 'system', content: prompt },
         { role: 'user', content }
@@ -32,9 +32,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     return res.status(200).json({ result });
   } catch (error: any) {
+    console.error('🔥 OpenAI API Error:', error);
+
     return res.status(500).json({
       error: 'OpenAI API error',
-      details: error?.response?.data || error.message
+      details: error?.response?.data || error.message || 'Unknown error'
     });
   }
 }
